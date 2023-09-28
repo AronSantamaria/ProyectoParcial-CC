@@ -1,0 +1,31 @@
+/* Estilos para el contenedor de películas */
+.movie-container {
+    text-align: center;
+    background-color: #f0f0f0; /* Color de fondo */
+    padding: 20px; /* Espaciado interior */
+}
+
+/* Estilos para las filas de películas */
+.movie-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 -10px; /* Espaciado negativo para compensar los márgenes internos de las películas */
+}
+
+/* Estilos para cada película */
+.movie {
+    margin: 10px;
+    text-align: center;
+    width: 200px; /* Ancho de cada película */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+h2 {
+    font-size: 18px; /* Tamaño del título de la película */
+    margin: 5px 0;
+}
