@@ -107,7 +107,7 @@ def movies():
         user = session['username']
         
         movie_id = request.args.get('movie_id')
-        response = requests .get(f"http://34.201.109.22:8006/media/{movie_id}")
+        response = requests .get(f"http://44.204.75.182:8006/media/{movie_id}")
 
         if (response.status_code == 200):
             json_response = response.json()
@@ -116,7 +116,7 @@ def movies():
         else:
             print("Error desconocido!")
 
-
+            
 
         flash(f"Vamos a ver una peli! {user}","info")
         return render_template('visual.html', json_response=json_response)
