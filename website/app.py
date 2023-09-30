@@ -92,14 +92,35 @@ def logout():
 def register():
     return render_template('register.html')
 
-@app.route('/home')
+@app.route('/home' , methods=['POST', 'GET'] )
 def home():
     if 'loggedin' in session:
-        user = session['username']
-        flash(f"Bienvenido {user}","info")
-        return render_template('home.html')
-    
+        search = request.form.get('search')
+
+        if (search is None or search == ""):
+            #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
+            response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+
+            #Procesar la respuesta y enviar a home.html
+            if(len(response[2]) != 0):
+                content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                flash(f"Tu color favorito es: ", response[1])
+            else:
+                flash("Aun no tenemos tus preferencias. Agrega algo!")
+
+            return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
+        else:
+            content = requests.get(f"http://3.212.27.88:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"}).json()
+
+            if content == 'NOT FOUND':
+                return render_template('home.html', mesg = "No pudimos encontrar ningun resultado.", movie_list=content)
+            else:
+                return render_template('home.html', mesg = "Resultados (" + str(len(content))+ "):", movie_list=content)
+
+        
     return redirect(url_for('index'))
+
+
 
 @app.route('/movies')
 def movies():
@@ -107,7 +128,8 @@ def movies():
         user = session['username']
         
         movie_id = request.args.get('movie_id')
-        response = requests .get(f"http://44.204.75.182:8006/media/{movie_id}")
+        
+        response = requests .get(f"http://3.212.27.88:8006/media/{movie_id}")
 
         if (response.status_code == 200):
             json_response = response.json()

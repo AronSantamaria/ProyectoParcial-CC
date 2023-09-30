@@ -48,7 +48,51 @@ def media(id):
 		else:
 			return jsonify("NOT FOUND"), 404
 
+
+@app.route('/skinners' , methods=["GET","POST", "PUT"])
+def skinners():
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    if request.method == "GET":
+        lista = request.get_json()
+        cur.execute(f"SELECT id, tittle, poster, likes_, rating FROM portada WHERE id IN ({', '.join(map(str, lista))})")
+        rows = cur.fetchall()
+
+        skin = list()
+        for row in rows:
+            skin.append(row)
+
+
+        if (skin):
+            return jsonify(skin),200
+        else:
+            return jsonify("NOT FOUND"), 404
+
 #a route with all the neccesary request methods for a single student	
+
+
+@app.route('/search' , methods=["GET","POST", "PUT"])
+def search():
+    conn = db_connection()
+    cur = conn.cursor()
+
+    if request.method == "GET":
+        lista = request.get_json()
+        request_1 = ', '.join([' \'%'+palabra.lower()+'%\' ' for palabra in lista])
+        cur.execute(f"select id, tittle, poster, likes_, rating from portada where (tittle || description) ILIKE ANY(ARRAY[{request_1}]);")
+        rows = cur.fetchall()
+
+        skin = list()
+        for row in rows:
+            skin.append(row)
+
+
+        if (skin):
+            return jsonify(skin),200
+        else:
+            return jsonify("NOT FOUND"), 404
 
 
 if __name__ == '__main__':
