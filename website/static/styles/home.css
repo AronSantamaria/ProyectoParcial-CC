@@ -18,14 +18,20 @@
     margin: 10px;
     text-align: center;
     width: 200px; /* Ancho de cada película */
+    min-height: 200px; /* Altura mínima */
 }
 
 img {
     max-width: 100%;
-    height: auto;
+    max-height: 100%; /* Altura máxima del 100% del contenedor padre */
+    width: auto; /* Ancho ajustado automáticamente para mantener la proporción */
 }
 
 h2 {
     font-size: 18px; /* Tamaño del título de la película */
     margin: 5px 0;
+}
+
+.category {
+    font-family: 'Gabarito', cursive;
 }
