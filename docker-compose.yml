@@ -1,11 +1,15 @@
  version: "3.3"
 
  services:
-   ApiLogin:
-     build: ./ApiLogin
+   website:
+     build: ./website
      ports:
-       - 5000:5000
-   Website:
-     build: ./Website
+       - 8050:8050
+   api-media:
+     build: ./api-media
      ports:
-       - 8080:80
+       - 8006:8006
+   api-preferences:
+     build: ./api-preferences
+     ports:
+       - 8010:8010
