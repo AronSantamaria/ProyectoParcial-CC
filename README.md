@@ -33,3 +33,11 @@ Este microservicio se encarga del frontend y de realizar los registros, login y 
 - Visualizar primera pagina : **/home**
 - Recupera las peliculas : **/movies**
 - Recupera los comentarios de los usuarios : **/coment**
+
+## Diagrama de Solución
+<br/>
+<div align="center">
+    <img src="Diagrama de solucion Proyecto-DS Proyecto.drawio.png" width="1000px">
+</div>
+<br/>
+En este diagrama podemos visualizar la estructura en la que nuestros contenedores se enlazan con nuestra maquina virtual de desarrollo y de la base de datos, a excepcion del "Website" esta sera cargada y administrada por el Apache Web Server, mientras que nuestras API's estaran conectadas a traves de diferentes puertos pero que se conectan con un unico puerto (5432) a nuestra base de datos en PostgreSQL.
