@@ -1,14 +1,8 @@
-FROM node:18
-# Create app directory
+FROM python:3.10
 WORKDIR /programas/api-comments
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --omit=dev
-# Bundle app source
+RUN pip3 install flask
+RUN pip install psycopg2
+RUN pip install psycopg2-binary
+RUN pip install flask_cors
 COPY . .
-EXPOSE 8080
-CMD [ "node", "api.js" ]
+CMD [ "python3", "./api.py" ]
