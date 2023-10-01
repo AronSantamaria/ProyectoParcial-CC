@@ -13,7 +13,7 @@ def db_connection():
     try:
         # Reemplaza los valores con los de tu base de datos en Amazon RDS
         conn = psycopg2.connect(
-            database="accounts",
+            database="masterPro",
             user="postgres",
             password="BUYBKZ7G5c1Mmh1Gg9xX",
             host="database-1.chduhfhuptun.us-east-1.rds.amazonaws.com",

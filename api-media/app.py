@@ -13,7 +13,7 @@ def db_connection():
     try:
         # Reemplaza los valores con los de tu base de datos en Amazon RDS
         conn = psycopg2.connect(
-            database="media",
+            database="masterPro",
             user="postgres",
             password="BUYBKZ7G5c1Mmh1Gg9xX",
             host="database-1.chduhfhuptun.us-east-1.rds.amazonaws.com",
@@ -38,7 +38,7 @@ def media(id):
 	cur = conn.cursor()
 
 	if request.method == "GET":
-		cur.execute(f"SELECT video FROM movies WHERE id={id}")
+		cur.execute(f"SELECT id,video FROM movies WHERE id={id}")
 		rows = cur.fetchall()
 		movies = ""
 		for row in rows:

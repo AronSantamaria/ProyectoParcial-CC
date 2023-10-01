@@ -15,7 +15,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:BUYBKZ7G5c1Mmh1Gg9xX@database-1.chduhfhuptun.us-east-1.rds.amazonaws.com/accounts'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:BUYBKZ7G5c1Mmh1Gg9xX@database-1.chduhfhuptun.us-east-1.rds.amazonaws.com/masterPro'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -28,8 +28,6 @@ class Cuentas(db.Model):
     email = db.Column(db.String(40), nullable=False, unique=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(500), nullable=False, unique=True)
-
-
 
 
 @app.route('/')
@@ -107,6 +105,7 @@ def home():
                 flash(f"Tu color favorito es: ", response[1])
             else:
                 flash("Aun no tenemos tus preferencias. Agrega algo!")
+                return render_template('home.html', mesg = "Tus Favoritos  (0)" , movie_list=[])
 
             return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
         else:
@@ -129,7 +128,7 @@ def movies():
         
         movie_id = request.args.get('movie_id')
         
-        response = requests .get(f"http://3.212.27.88:8006/media/{movie_id}")
+        response = requests.get(f"http://3.212.27.88:8006/media/{movie_id}")
 
         if (response.status_code == 200):
             json_response = response.json()
@@ -138,13 +137,44 @@ def movies():
         else:
             print("Error desconocido!")
 
+        comments = [("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria")]
             
-
         flash(f"Vamos a ver una peli! {user}","info")
-        return render_template('visual.html', json_response=json_response)
+        return render_template('visual.html', id_tocoment=movie_id , json_response=json_response[1], comentarios=comments)
     
     return redirect(url_for('index'))
 
+
+@app.route('/coment', methods=['POST', 'GET'])
+def coment():
+    if 'loggedin' in session:
+        id_cuenta = session['id']
+        id_movie = request.form.get('movieIdField')
+
+        ##Insercion de comentario en la BD a atra vez del contenedor
+        ##INMPLEMENTAR POST DEL COMENTARIO
+        movie_id = request.args.get('movie_id')
+        response = requests.get(f"http://3.212.27.88:8006/media/{movie_id}")
+
+        if (response.status_code == 200):
+            json_response = response.json()
+        elif (response.status_code == 404):
+            print("El servidor no ha encontrado el articulo buscado")
+        else:
+            print("Error desconocido!")
+
+
+
+
+        comments = [("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria")]
+            
+        
+        return render_template('visual.html', id_tocoment=1235 , json_response="d212", comentarios=comments)
+
+
+
+
+    return redirect(url_for('index'))
 
 @app.errorhandler(IndexError)
 def _indexError(err):
@@ -155,4 +185,4 @@ def _valueError(err):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8000 ,debug=True)
+    app.run(host='0.0.0.0', port=8050 ,debug=True)
