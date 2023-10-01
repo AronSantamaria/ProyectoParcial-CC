@@ -10,26 +10,26 @@ En resumen, nuestra aplicación web ofrece una plataforma completa y funcional p
 
 ## API 1: Comments
 Este microservicio se encarga de conectarse a la BD, asimismo, crea diferentes URL para recuperar, añadir, eliminar y actualizar los comentarios del usuario, es decir, es nuestro sistema CRUD.
-- Recuperar : /comments/:peliculaId
-- Añadir : /comments
-- Eliminar : /comments/:peliculaId/:usuarioId
-- Actualizar /comments/:peliculaId/:usuarioId
+- Recuperar : **/comments/:peliculaId**
+- Añadir : **/comments**
+- Eliminar : **/comments/:peliculaId/:usuarioId**
+- Actualizar **/comments/:peliculaId/:usuarioId**
 
 ## API 2: Media
 Este microservicio se encarga de conectarse a la BD y realizar distintas tareas, tales como:
-- Recupera el id y el link del video que se incluira en el HTML correspondiente al reproductor: /media/\<int:id>
-- Recupera el id, titulo, poster, likes y rating de la pelicula correspondiente para que se visualice en la vista previa : /skinners
-- Esta ruta se usara al momento de buscar una pelicula en especifico en la barra de busqueda : /search
+- Recupera el id y el link del video que se incluira en el HTML correspondiente al reproductor: **/media/\<int:id>**
+- Recupera el id, titulo, poster, likes y rating de la pelicula correspondiente para que se visualice en la vista previa : **/skinners**
+- Esta ruta se usara al momento de buscar una pelicula en especifico en la barra de busqueda : **/search**
 
 ## API 3: Preferences 
 Se conecta a la base de datos y realiza esta tarea en base a esta ruta:
-- Recupera las peliculas favoritas del usuario en concreto : /preference/<int:id_account>
+- Recupera las peliculas favoritas del usuario en concreto : **/preference/\<int:id_account>**
 
 ## Website:
 Este microservicio se encarga del frontend y de realizar los registros, login y logout del usuario, asi como la recuperacion de peliculas y comentarios
-- Login : /signin
-- Registro : /signup
-- Cerrar Sesion : /logout
-- Visualizar primera pagina : /home
-- Recupera las peliculas : /movies
-- Recupera los comentarios de los usuarios : /coment
+- Login : **/signin**
+- Registro : **/signup**
+- Cerrar Sesion : **/logout**
+- Visualizar primera pagina : **/home**
+- Recupera las peliculas : **/movies**
+- Recupera los comentarios de los usuarios : **/coment**
