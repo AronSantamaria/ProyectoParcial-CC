@@ -13,3 +13,7 @@
      build: ./api-preferences
      ports:
        - 8010:8010
+   api-comments:
+     build: ./api-comments
+     ports:
+       - 3000:3000

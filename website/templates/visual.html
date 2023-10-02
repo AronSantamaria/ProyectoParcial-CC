@@ -60,12 +60,12 @@
         </nav>
 
     <video id="MY_VIDEO_1" class="video-js vjs-default-skin" style="margin-bottom: 15px;" controls preload="none" width="100%" height="800px" poster="MY_VIDEO_POSTER.jpg" data-setup="{}">
-        <source src="{{json_response[0]}}" type='video/mp4'>
+        <source src="{{json_response}}" type='video/mp4'>
 
         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
     </video>
 
-
+<p>{{logcasual}}</p>
 <div class="container mt-5 mb-5">
 
             <div class="row height d-flex justify-content-center align-items-center">
@@ -83,11 +83,16 @@
                   <div class="mt-3 d-flex flex-row align-items-center p-3 form-color">
                     <form action="/coment" method="POST">
                       
-                      <input type="text" class="form-control" placeholder="Comenta...">
-                      <input type="hidden" id="movieIdField" value="100003">
+                      <input id="comentario"   name="comentario" type="text" class="form-control" placeholder="Comenta...">
+                      <input type="number" id="movieIdField" name="movieIdField" value={{id_tocoment}} style="display: none;">
                       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Enviar</button>
 
                     </form>
+
+
+
+
+
                   </div>
 
 

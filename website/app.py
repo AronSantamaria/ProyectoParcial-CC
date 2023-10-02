@@ -97,17 +97,23 @@ def home():
 
         if (search is None or search == ""):
             #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
-            response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+            try:
+                response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+                if(response == "NOT FOUND"):
+                    response = []
+                else:
+                    content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                    flash(f"Tu color favorito es: ", response[1])
+                    return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
+            except Exception as e:
+                pass
+            
 
-            #Procesar la respuesta y enviar a home.html
-            if(len(response[2]) != 0):
-                content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
-                flash(f"Tu color favorito es: ", response[1])
-            else:
-                flash("Aun no tenemos tus preferencias. Agrega algo!")
-                return render_template('home.html', mesg = "Tus Favoritos  (0)" , movie_list=[])
+            flash("Aun no tenemos tus preferencias. Agrega algo!")
+            return render_template('home.html', mesg = "Tus Favoritos  (0)" , movie_list=[])
+                
 
-            return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
+            
         else:
             content = requests.get(f"http://3.212.27.88:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"}).json()
 
@@ -137,10 +143,10 @@ def movies():
         else:
             print("Error desconocido!")
 
-        comments = [("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria")]
+        comments = requests.get(f"http://3.212.27.88:3000/comments/{movie_id}").json()
             
         flash(f"Vamos a ver una peli! {user}","info")
-        return render_template('visual.html', id_tocoment=movie_id , json_response=json_response[1], comentarios=comments)
+        return render_template('visual.html', logcasual=comments , id_tocoment=movie_id , json_response=json_response[1], comentarios=comments)
     
     return redirect(url_for('index'))
 
@@ -149,13 +155,14 @@ def movies():
 def coment():
     if 'loggedin' in session:
         id_cuenta = session['id']
-        id_movie = request.form.get('movieIdField')
+        movie_id = request.form.get('movieIdField')
+        comentario = request.form.get('comentario')
+        datos = [movie_id, id_cuenta, str(comentario)]
+        response = requests.post(f"http://3.212.27.88:3000/comment", data=json.dumps(datos), headers={"Content-Type": "application/json"})
+        
 
-        ##Insercion de comentario en la BD a atra vez del contenedor
-        ##INMPLEMENTAR POST DEL COMENTARIO
-        movie_id = request.args.get('movie_id')
-        response = requests.get(f"http://3.212.27.88:8006/media/{movie_id}")
 
+        response = requests.get(f"http://3.212.27.88:8006/media/{(movie_id)}")
         if (response.status_code == 200):
             json_response = response.json()
         elif (response.status_code == 404):
@@ -164,17 +171,14 @@ def coment():
             print("Error desconocido!")
 
 
+        comments = requests.get(f"http://3.212.27.88:3000/comments/{(movie_id)}").json()
 
 
-        comments = [("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria"),("Gastropub cardigan jean shorts, kogi Godard PBR&B lo-fi locavore.","14.45","34/31/31","Aaron Santamaria")]
-            
         
-        return render_template('visual.html', id_tocoment=1235 , json_response="d212", comentarios=comments)
-
-
-
+        return render_template('visual.html', logcasual=json_response[1] , id_tocoment=movie_id , json_response=json_response[1], comentarios=comments)
 
     return redirect(url_for('index'))
+
 
 @app.errorhandler(IndexError)
 def _indexError(err):

@@ -21,7 +21,7 @@ conn = psycopg2.connect(**db_config)
 def get_comments(peliculaId):
     try:
         cursor = conn.cursor()
-        cursor.execute('SELECT comentario, added_on, id_usuario FROM Puntuacion WHERE id_pelicula = %s', (peliculaId,))
+        cursor.execute('SELECT p.comentario, p.added_on, c.username FROM Puntuacion p INNER JOIN cuentas c ON p.id_usuario = c.id_cuentas WHERE p.id_pelicula = %s', (peliculaId,) )
         comments = cursor.fetchall()
         cursor.close()
         return jsonify(comments), 200
@@ -30,16 +30,14 @@ def get_comments(peliculaId):
         return jsonify({'error': 'Internal Server Error'}), 500
 
 # Agregar un comentario
-@app.route('/comments', methods=['POST'])
+@app.route('/comment', methods=['POST'])
 def add_comment():
     data = request.get_json()
-    peliculaId = data.get('id_movie')
-    usuarioId = data.get('id_cuenta')
-    comentario = data.get('comentario')
+    
     
     try:
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO Puntuacion (id_pelicula, id_usuario, comentario) VALUES (%s, %s, %s)', (peliculaId, usuarioId, comentario))
+        cursor.execute('INSERT INTO Puntuacion (id_pelicula, id_usuario, comentario) VALUES (%s, %s, %s)', (data[0], data[1], data[2]))
         conn.commit()
         cursor.close()
         return jsonify({'message': 'Comentario agregado correctamente.'}), 201
@@ -48,33 +46,7 @@ def add_comment():
         return jsonify({'error': 'Internal Server Error'}), 500
 
 # Eliminar un comentario
-@app.route('/comments/<int:peliculaId>/<int:usuarioId>', methods=['DELETE'])
-def delete_comment(peliculaId, usuarioId):
-    try:
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM Puntuacion WHERE id_pelicula = %s AND id_usuario = %s', (peliculaId, usuarioId))
-        conn.commit()
-        cursor.close()
-        return jsonify({'message': 'Comentario eliminado correctamente.'}), 200
-    except Exception as e:
-        print('Error al eliminar comentario:', str(e))
-        return jsonify({'error': 'Internal Server Error'}), 500
 
-# Actualizar un comentario
-@app.route('/comments/<int:peliculaId>/<int:usuarioId>', methods=['PUT'])
-def update_comment(peliculaId, usuarioId):
-    data = request.get_json()
-    nuevoComentario = data.get('nuevoComentario')
-    
-    try:
-        cursor = conn.cursor()
-        cursor.execute('UPDATE Puntuacion SET comentario = %s WHERE id_pelicula = %s AND id_usuario = %s', (nuevoComentario, peliculaId, usuarioId))
-        conn.commit()
-        cursor.close()
-        return jsonify({'message': 'Comentario actualizado correctamente.'}), 200
-    except Exception as e:
-        print('Error al actualizar comentario:', str(e))
-        return jsonify({'error': 'Internal Server Error'}), 500
 
 if __name__ == '__main__':
     port = 3000

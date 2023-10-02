@@ -2,7 +2,7 @@ FROM python:3.10
 WORKDIR /programas/website
 RUN python -m pip install --upgrade pip
 RUN pip install alembic==1.6.5
-RUN pip install Flask==2.1.3
+RUN pip install Flask==2.3.3
 RUN pip install Flask-Migrate==3.0.1
 RUN pip install Flask-SQLAlchemy==2.5.1
 RUN pip install flask-restx==0.5.1

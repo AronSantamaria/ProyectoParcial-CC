@@ -1,41 +1,32 @@
-from flask import Flask, request,jsonify, render_template
-import  json
+from flask import Flask, request, jsonify
 import psycopg2
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
 
-def db_connection():
-    conn = None
+# Configura la conexión a PostgreSQL
+db_config = {
+    "user": "postgres",
+    "password": "BUYBKZ7G5c1Mmh1Gg9xX",
+    "host": "database-1.chduhfhuptun.us-east-1.rds.amazonaws.com",
+    "port": 5432,
+    "database": "masterPro"
+}
+
+conn = psycopg2.connect(**db_config)
+
+@app.route('/comments/<int:peliculaId>', methods=['GET'])
+def get_comments(peliculaId):
     try:
-        # Reemplaza los valores con los de tu base de datos en Amazon RDS
-        conn = psycopg2.connect(
-            database="media",
-            user="postgres",
-            password="BUYBKZ7G5c1Mmh1Gg9xX",
-            host="database-1.chduhfhuptun.us-east-1.rds.amazonaws.com",
-            port="5432"  # El puerto predeterminado de PostgreSQL es 5432
-        )
-        if conn is not None:
-            print("Conexión exitosa a la base de datos PostgreSQL")
-        else:
-            print("No se pudo establecer la conexión a la base de datos PostgreSQL")
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM Puntuacion WHERE id_pelicula = %s', (peliculaId,))
+        comments = cursor.fetchall()
+        cursor.close()
+        return jsonify(comments), 200
+    except Exception as e:
+        print('Error fetching comments:', str(e))
+        return jsonify({'error': 'Internal Server Error'}), 500
 
-    except psycopg2.Error as e:
-        print(e)
-
-    return conn
-
-conn = db_connection()
-cur = conn.cursor()
-
-
-cur.execute(f"select * from portada where id IN (100007,100008, 100009);")
-rows = cur.fetchall()
-movies = list()
-for row in rows:
-    movies.append(row)
-
-            
-if (movies):
-    print(movies)
-else:
-    print("NOT FOUND")
+if __name__ == '__main__':
+   app.run(host='0.0.0.0', port=3000, debug=True)
