@@ -35,9 +35,15 @@ Este microservicio se encarga del frontend y de realizar los registros, login y 
 - Recupera los comentarios de los usuarios : **/coment**
 
 ## Diagrama de Solución
-<br/>
+<br>
 <div align="center">
-    <img src="Diagrama de solucion Proyecto-DS Proyecto.drawio.png" width="1000px">
+    <img src="DS Proyecto.drawio.png" width="1000px">
 </div>
 <br/>
-En este diagrama podemos visualizar la estructura en la que nuestros contenedores se enlazan con nuestra maquina virtual de desarrollo y de la base de datos, a excepcion del "Website" esta sera cargada y administrada por el Apache Web Server, mientras que nuestras API's estaran conectadas a traves de diferentes puertos pero que se conectan con uno unico (5432) a nuestra base de datos en PostgreSQL. Por otro lado, nuestas 2 maquinas virtuales han sido lanzadas en la region de "US-East" que corresponde a Ohio, USA, de esta forma contaremos con una mejor latencia y por ende, mejor respuesta de nuestras API's al momento de usar la aplicacion web.
+
+En este diagrama podemos visualizar la estructura en la que nuestras 3 maquinas virtuales estan enlazadas y siendo gestionadas a traves de un "Load Balancer", cada una ha sido lanzada en zona de disponibilidad diferente. Asimismo, cada maquina virtual corre los 4 contenedores y cada uno con un puerto diferente. Por otro lado, tenemos nuestra base de datos basada en PostgreSQL que esta siendo administrada y mantenida a traves de un RDS y que se conecta directamente con nuestros contenedores a traves del puerto 5432 (por defecto de PostgreSQL). Cabe resaltar que las credenciales son las siguientes.
+- Nombre de usuario maestro: postgres
+- Contraseña maestra: BUYBKZ7G5c1Mmh1Gg9xX
+- Punto de enlace: database-1.chduhfhuptun.us-east-1.rds.amazonaws.com
+
+Luego, nuestro sitio web esta siendo cargada y administrada por el microservicio de Flask. Finalmente, cada maquina virtual se encuentra en la region de Ohio, USA lo cual nos permitira una mayor latencia y respuesta de las peticiones que se le pida a la aplicacion web.
