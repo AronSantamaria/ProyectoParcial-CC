@@ -47,3 +47,33 @@ En este diagrama podemos visualizar la estructura en la que nuestras 3 maquinas 
 - Punto de enlace: database-1.chduhfhuptun.us-east-1.rds.amazonaws.com
 
 Luego, nuestro sitio web esta siendo cargada y administrada por el microservicio de Flask. Finalmente, cada maquina virtual se encuentra en la region de Ohio, USA lo cual nos permitira una mayor latencia y respuesta de las peticiones que se le pida a la aplicacion web.
+
+##Evidencias
+
+1. Maquinas Virtuales
+<br>
+<div align="center">
+    <img src="Evidencia/MV's.jpeg" width="500px">
+</div>
+<br/>
+
+2. Grupos de destino
+<br>
+<div align="center">
+    <img src="Evidencia/Grupo de destino.jpeg" width="500px">
+</div>
+<br/>
+
+3. TG-8050
+<br>
+<div align="center">
+    <img src="Evidencia/TG-8050.jpeg" width="500px">
+</div>
+<br/>
+
+4. Pagina Web
+<br>
+<div align="center">
+    <img src="Evidencia/Pagina web.jpeg" width="500px">
+</div>
+<br/>
