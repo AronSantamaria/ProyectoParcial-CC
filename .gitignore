@@ -1,2 +1,5 @@
 /env
 /api-comments/__pycache__
+/website/__pycache__
+/api-media/__pycache__
+/api-preferences/__pycache__

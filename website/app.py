@@ -94,6 +94,7 @@ def register():
 def home():
     if 'loggedin' in session:
         search = request.form.get('search')
+        # print(search)
 
         if (search is None or search == ""):
             #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
