@@ -27,6 +27,35 @@
             }
     </style>
 
+    <script>
+    // Agrega un event listener para manejar el clic en el botón
+    document.querySelectorAll('.like-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const movieId = this.getAttribute('data-movie-id');
+
+            // Realiza la solicitud asincrónica al servidor Flask
+            fetch(`/like?movie_id=${movieId}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'  // Indica una solicitud AJAX
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Actualiza la interfaz de usuario, muestra una confirmación, etc.
+                    console.log('Me gusta registrado con éxito.');
+                } else {
+                    console.error('Error al registrar el Me gusta.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al registrar el Me gusta:', error);
+            });
+        });
+    });
+</script>
+
+
   </head>
 
   <body>
@@ -35,27 +64,26 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="">El pirata-pelis</a>
+            <a class="navbar-brand" href="{{ url_for('selection', identifier=0) }}">El pirata-pelis</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li class="nav-item active">
-                <a class="nav-link" href="">Peliculas<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url_for('selection', identifier=1) }}">Peliculas<span class="sr-only">(current)</span></a>
               </li>
-
-
               <li class="nav-item active">
-                <a class="nav-link" href="">Series</a>
+                <a class="nav-link" href="{{ url_for('selection', identifier=2) }}">Series</a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="">Ya tu sabe</a>
               </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline my-2 my-lg-0" action="/home" method="POST">
+              <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
             </form>
               
               <li style="border-right: none; float:right" class ="ocultar-punto" >
           <a title="Cerrar sesión" href="{{ url_for('logout') }}" style="text-decoration: none;">Cerrar Sesión</a>
+
 
         </nav>
 

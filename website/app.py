@@ -94,35 +94,60 @@ def register():
 def home():
     if 'loggedin' in session:
         search = request.form.get('search')
-        # print(search)
 
-        if (search is None or search == ""):
-            #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
-            try:
-                response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
-                if(response == "NOT FOUND"):
-                    response = []
-                else:
-                    content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
-                    flash(f"Tu color favorito es: ", response[1])
-                    return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
-            except Exception as e:
-                pass
-            
 
-            flash("Aun no tenemos tus preferencias. Agrega algo!")
-            return render_template('home.html', mesg = "Tus Favoritos  (0)" , movie_list=[])
+        try:
+            if (search is None or search == ""):
+                #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
+                try:
+                    response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+                    if(response == "NOT FOUND"):
+                        response = []
+                    else:
+                        content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                        flash(f"Tu color favorito es: ", response[1])
+                        return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
+                except Exception as e:
+                    pass
                 
 
-            
-        else:
-            content = requests.get(f"http://3.212.27.88:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"}).json()
+                flash("Aun no tenemos tus preferencias. Agrega algo!")
+                return render_template('home.html', mesg = "Tus Favoritos  (0)" , movie_list=[])
+                    
 
-            if content == 'NOT FOUND':
-                return render_template('home.html', mesg = "No pudimos encontrar ningun resultado.", movie_list=content)
+                
             else:
-                return render_template('home.html', mesg = "Resultados (" + str(len(content))+ "):", movie_list=content)
+                content = requests.get(f"http://3.212.27.88:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"})
 
+
+                if content.status_code == 404:
+                    return render_template('home.html', mesg = "No pudimos encontrar ningun resultado.", movie_list=content.json())
+                else:
+                    return render_template('home.html', mesg = "Resultados (" + str(len(content.json()))+ "):", movie_list=content.json())
+        except requests.exceptions.ConnectTimeout as err:
+            # Manejar el error de tiempo de conexión aquí
+            return render_template("Error.html", err=err)     
+        
+    return redirect(url_for('index'))
+
+
+@app.route('/selection', methods=['POST','GET'])
+def selection():
+    if 'loggedin' in session:
+        identifier = int(request.args.get('identifier'))
+        if(identifier == 0):
+            response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+            if(response == "NOT FOUND"):
+                content = []
+            else:
+                content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                flash(f"Tu color favorito es: ", response[1])
+            return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
+
+        else:
+            content = requests.get(f"http://3.212.27.88:8006/movieseries/{identifier}").json()
+
+        return render_template('home.html', mesg = "", movie_list=content)
         
     return redirect(url_for('index'))
 
@@ -180,12 +205,21 @@ def coment():
 
     return redirect(url_for('index'))
 
+@app.route('/like' , methods=["GET","POST", "PUT"])
+def like():
+    if 'loggedin' in session:
+        requests.post(f"http://3.212.27.88:8010/like/{session['id']}/{request.args.get('movie_id')}")
+        return '', 204
+
 
 @app.errorhandler(IndexError)
 def _indexError(err):
     return render_template("Error.html",err = err)
 @app.errorhandler(ValueError)
 def _valueError(err):
+    return render_template("Error.html",err = err)
+@app.errorhandler(requests.exceptions.ConnectTimeout)
+def _indexError(err):
     return render_template("Error.html",err = err)
 
 

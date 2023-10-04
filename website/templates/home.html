@@ -34,13 +34,13 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="">El pirata-pelis</a>
+            <a class="navbar-brand" href="{{ url_for('selection', identifier=0) }}">El pirata-pelis</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li class="nav-item active">
-                <a class="nav-link" href="">Peliculas<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url_for('selection', identifier=1) }}">Peliculas<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="">Series</a>
+                <a class="nav-link" href="{{ url_for('selection', identifier=2) }}">Series</a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="">Ya tu sabe</a>
@@ -61,7 +61,7 @@
     <div class="movie-container">
         <h1 class="category">{{ mesg }}</h1>
         {% for movie in movie_list%}
-            {% if loop.index  % 4 == 1 %}
+            {% if loop.index  % 6 == 1 %}
             <div class="movie-row">
             {% endif %}
                 <div class="movie">
@@ -70,13 +70,16 @@
                         
                         
                         <h2>{{ movie[1] }}</h2>
-                        <i class="fa-solid fa-thumbs-up"></i>
+                        <a href="{{ url_for('like', movie_id=movie[0]) }}">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </a>
+
                         <p>{{movie[3]}}</p>
                         <p>Rate: </p>
                         <p>{{movie[4]}}</p>
                     </a>
                 </div>
-            {% if loop.index % 4 == 0 or loop.last %}
+            {% if loop.index % 6 == 0 or loop.last %}
             </div>
              {% endif %}
         {% endfor %}
