@@ -1,23 +1,14 @@
-body{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
 .seri{
 	width: 100%;
+    
     text-align: center;
-    display: flex;
-	justify-content: center;
+    display: inline-block;
 }
 .noma{
     background-color: mediumseagreen;
     width: 25%;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	padding: 20;
-	border: 3px solid black;
+    text-align: center;
+    display: inline-block;
 }
 
 body{
@@ -46,8 +37,4 @@ input[type="text"],input[type="password"],[type="number"],[type="email"]{
 	border-radius: 3px;
 	border: 1px solid #eee;
 	margin: 20px auto;
-}
-
-.etiqueta{
-	font-size: 23px;
 }

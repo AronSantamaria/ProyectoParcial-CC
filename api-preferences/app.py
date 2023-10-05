@@ -52,5 +52,18 @@ def preference(id_account):
 #a route with all the neccesary request methods for a single student	
 
 
+@app.route('/like/<int:id_user>/<int:id_movie>' , methods=["GET","POST", "PUT"])
+def like(id_user, id_movie):
+
+    conn = db_connection()
+    cur = conn.cursor()
+    var = f'"{id_movie}"'
+    cur.execute(f"INSERT INTO preferences (id, color_hex, favorites) VALUES ({id_user}, '#5639bf'::text, '[{var}]') ON CONFLICT (id) DO UPDATE SET favorites = preferences.favorites || '[{var}]'::jsonb;")
+    conn.commit()
+
+    return '', 204
+
+
+
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8010, debug=True)

@@ -94,6 +94,24 @@ def search():
         else:
             return jsonify("NOT FOUND"), 404
 
+@app.route('/movieseries/<int:identifier>' , methods=["GET","POST", "PUT"])
+def movieseries(identifier):
+    conn = db_connection()
+    cur = conn.cursor()
+    if (identifier):
+        cur.execute(f"SELECT id, tittle, poster, likes_, rating from portada where CAST(LEFT(id::text, 1) AS integer) = {identifier};")
+
+        rows = cur.fetchall()
+        skin = list()
+        for row in rows:
+            skin.append(row)
+
+
+        if (skin):
+            return jsonify(skin),200
+        else:
+            return jsonify("NOT FOUND"), 404
+
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8006, debug=True)
