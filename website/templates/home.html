@@ -70,13 +70,19 @@
                         
                         
                         <h2>{{ movie[1] }}</h2>
-                        <a href="{{ url_for('like', movie_id=movie[0]) }}">
-                            <i class="fa-solid fa-thumbs-up"></i>
-                        </a>
-
-                        <p>{{movie[3]}}</p>
-                        <p>Rate: </p>
-                        <p>{{movie[4]}}</p>
+                        <div class="acomodar">
+                          <div class="separar">
+                            <a href="{{ url_for('like', movie_id=movie[0]) }}">
+                              <i class="fa-solid fa-thumbs-up"></i>
+                            </a>
+                            <p>{{movie[3]}}</p>
+                          </div>
+                          
+                          <div>
+                            <p class="juntar">Rate: </p>
+                            <p>{{movie[4]}}</p>
+                          </div>
+                        </div>
                     </a>
                 </div>
             {% if loop.index % 6 == 0 or loop.last %}

@@ -28,11 +28,15 @@
             <div class="noma">
                 <form action="/signin" method="POST">
                     <div class="perri">
-                        <label for="e-mail">E-mail: </label> 
+                        <div>
+                            <label for="e-mail" class="etiqueta">E-mail: </label>
+                        </div> 
                         <input id="e-mail" name="mail" type="email"/>
                     </div>
                     <div class="perri">
-                        <label for="password">Contraseña: </label>	
+                        <div>
+                            <label for="password" class="etiqueta">Contraseña: </label>
+                        </div>
                         <input id="password" name="password" type="password" /> 
                     </div>
                     <div class="perri">
@@ -41,7 +45,15 @@
                     </div>
                 </form>
             </div>
-            
+            <div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <p>{{ msg }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
     </body>
 </html>
