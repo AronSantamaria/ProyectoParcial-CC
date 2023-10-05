@@ -100,11 +100,11 @@ def home():
             if (search is None or search == ""):
                 #CONECTASE CON EL MICROSERVICIO DE PREFERENCIAS
                 try:
-                    response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+                    response = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8010/preference/{session['id']}").json()
                     if(response == "NOT FOUND"):
                         response = []
                     else:
-                        content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                        content = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
                         flash(f"Tu color favorito es: ", response[1])
                         return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
                 except Exception as e:
@@ -117,7 +117,7 @@ def home():
 
                 
             else:
-                content = requests.get(f"http://3.212.27.88:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"})
+                content = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/search", data=json.dumps(search.split()), headers={"Content-Type": "application/json"})
 
 
                 if content.status_code == 404:
@@ -136,16 +136,16 @@ def selection():
     if 'loggedin' in session:
         identifier = int(request.args.get('identifier'))
         if(identifier == 0):
-            response = requests.get(f"http://3.212.27.88:8010/preference/{session['id']}").json()
+            response = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8010/preference/{session['id']}").json()
             if(response == "NOT FOUND"):
                 content = []
             else:
-                content = requests.get(f"http://3.212.27.88:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
+                content = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/skinners", data=json.dumps(response[2]), headers={"Content-Type": "application/json"}).json()
                 flash(f"Tu color favorito es: ", response[1])
             return render_template('home.html', mesg = ("Tus Favoritos  (" + str(len(content))) + "):", movie_list=content)
 
         else:
-            content = requests.get(f"http://3.212.27.88:8006/movieseries/{identifier}").json()
+            content = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/movieseries/{identifier}").json()
 
         return render_template('home.html', mesg = "", movie_list=content)
         
@@ -160,7 +160,7 @@ def movies():
         
         movie_id = request.args.get('movie_id')
         
-        response = requests.get(f"http://3.212.27.88:8006/media/{movie_id}")
+        response = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/media/{movie_id}")
 
         if (response.status_code == 200):
             json_response = response.json()
@@ -169,7 +169,7 @@ def movies():
         else:
             print("Error desconocido!")
 
-        comments = requests.get(f"http://3.212.27.88:3000/comments/{movie_id}").json()
+        comments = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:3000/comments/{movie_id}").json()
             
         flash(f"Vamos a ver una peli! {user}","info")
         return render_template('visual.html', logcasual=comments , id_tocoment=movie_id , json_response=json_response[1], comentarios=comments)
@@ -184,11 +184,11 @@ def coment():
         movie_id = request.form.get('movieIdField')
         comentario = request.form.get('comentario')
         datos = [movie_id, id_cuenta, str(comentario)]
-        response = requests.post(f"http://3.212.27.88:3000/comment", data=json.dumps(datos), headers={"Content-Type": "application/json"})
+        response = requests.post(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:3000/comment", data=json.dumps(datos), headers={"Content-Type": "application/json"})
         
 
 
-        response = requests.get(f"http://3.212.27.88:8006/media/{(movie_id)}")
+        response = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8006/media/{(movie_id)}")
         if (response.status_code == 200):
             json_response = response.json()
         elif (response.status_code == 404):
@@ -197,7 +197,7 @@ def coment():
             print("Error desconocido!")
 
 
-        comments = requests.get(f"http://3.212.27.88:3000/comments/{(movie_id)}").json()
+        comments = requests.get(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:3000/comments/{(movie_id)}").json()
 
 
         
@@ -208,7 +208,7 @@ def coment():
 @app.route('/like' , methods=["GET","POST", "PUT"])
 def like():
     if 'loggedin' in session:
-        requests.post(f"http://3.212.27.88:8010/like/{session['id']}/{request.args.get('movie_id')}")
+        requests.post(f"http://LG-PROD-PROY-1241412899.us-east-1.elb.amazonaws.com:8010/like/{session['id']}/{request.args.get('movie_id')}")
         return '', 204
 
 
